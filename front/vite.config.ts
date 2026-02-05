@@ -16,16 +16,16 @@ export default defineConfig({
     port: 4173,
     host: "0.0.0.0",
     allowedHosts: [
-      "admin.dfixkart.com",
-      "www.admin.dfixkart.com",
+      "admin.jainfoodsvmp.com",
+      "www.admin.jainfoodsvmp.com",
     ],
   },
   // Add server configuration for development
   server: {
     host: "0.0.0.0",
     allowedHosts: [
-      "admin.dfixkart.com",
-      "www.admin.dfixkart.com",
+      "admin.jainfoodsvmp.com",
+      "www.admin.jainfoodsvmp.com",
     ],
   },
 });
