@@ -23,6 +23,6 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             cd client
-            npm ci --legacy-peer-deps
+            npm install --legacy-peer-deps
             npm run build
             pm2 restart jain-client --update-env
