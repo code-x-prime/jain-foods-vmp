@@ -95,9 +95,9 @@ app.use((req, res, next) => {
   next();
 });
 
-/* -------------------- STATIC -------------------- */
+/* -------------------- STATIC (product/category images – nginx proxies /upload/ to this) -------------------- */
 
-app.use(express.static("public/upload"));
+app.use("/upload", express.static("public/upload"));
 
 /* -------------------- RAZORPAY -------------------- */
 

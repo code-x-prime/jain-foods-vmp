@@ -3,11 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-    Monitor,
-    Smartphone,
-} from "lucide-react";
+import { Monitor } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { toast } from "sonner";
 
@@ -16,8 +12,6 @@ function LanguageManagement() {
     const { language, setLanguage, t } = useLanguage();
     // Local state for admin language selection
     const [selectedAdminLanguage, setSelectedAdminLanguage] = useState(language);
-    // For client languages, we'll keep local state for now as placeholder for DB integration
-    const [clientLanguages, setClientLanguages] = useState(["en"]);
 
     // Update local state when global state changes (e.g. initial load)
     // but only if user hasn't interacted yet (or we can just respect global always on load)
@@ -35,14 +29,6 @@ function LanguageManagement() {
         { code: "ja", name: "Japanese", flag: "🇯🇵" },
         { code: "ar", name: "Arabic", flag: "🇸🇦" },
     ];
-
-    const handleClientLanguageChange = (languageCode: string, checked: boolean | string): void => {
-        if (checked) {
-            setClientLanguages((prev: string[]) => [...prev, languageCode]);
-        } else {
-            setClientLanguages((prev: string[]) => prev.filter((code: string) => code !== languageCode));
-        }
-    };
 
     const handleSave = async () => {
 
@@ -98,57 +84,6 @@ function LanguageManagement() {
                             <Badge variant="secondary" className="bg-[#4CAF50] text-white">
                                 {t("settings.current")}: {currentLang?.flag} {currentLang?.name}
                             </Badge>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-
-            {/* Client Website Language */}
-            <Card className="bg-[#F9FAFB] border-[#E5E7EB]">
-                <CardHeader className="pb-4">
-                    <CardTitle className="text-lg font-semibold text-[#1F2937] flex items-center gap-2">
-                        <Smartphone className="h-5 w-5 text-[#2196F3]" />
-                        {t("settings.client_website_language")}
-                    </CardTitle>
-                    <p className="text-sm text-[#6B7280] mt-1">
-                        {t("settings.client_website_desc")}
-                    </p>
-                </CardHeader>
-                <CardContent>
-                    <div className="space-y-4">
-                        <div>
-                            <label className="text-sm font-medium text-[#374151] mb-3 block">
-                                {t("settings.select_languages_multi")}:
-                            </label>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                {languages.map((lang) => (
-                                    <div key={`client-${lang.code}`} className="flex items-center space-x-2">
-                                        <Checkbox
-                                            id={`client-${lang.code}`}
-                                            checked={clientLanguages.includes(lang.code)}
-                                            onCheckedChange={(checked) => handleClientLanguageChange(lang.code, checked)}
-                                        />
-                                        <label
-                                            htmlFor={`client-${lang.code}`}
-                                            className="text-sm font-medium text-[#374151] flex items-center gap-2 cursor-pointer"
-                                        >
-                                            <span>{lang.flag}</span>
-                                            <span>{lang.name}</span>
-                                        </label>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-sm font-medium text-[#374151]"> {t("settings.selected")}:</span>
-                            {clientLanguages.map(code => {
-                                const lang = languages.find(l => l.code === code);
-                                return (
-                                    <Badge key={code} variant="secondary" className="bg-[#2196F3] text-white">
-                                        {lang?.flag} {lang?.name}
-                                    </Badge>
-                                );
-                            })}
                         </div>
                     </div>
                 </CardContent>
