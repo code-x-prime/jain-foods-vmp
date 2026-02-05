@@ -1,3 +1,3 @@
-import loginbg from "./login.jpg";
+import loginbg from "./login.png";
 
 export { loginbg };

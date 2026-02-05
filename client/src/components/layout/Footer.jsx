@@ -132,17 +132,27 @@ export const Footer = () => {
             </div>
           </div>
 
-          {/* Contact */}
+          {/* Contact - single address + link to all outlets */}
           <div>
             <h3 className="text-xl font-bold text-[#6A1E1E] mb-6 font-display tracking-tight">Contact Us</h3>
             <ul className="space-y-5">
-              <li className="flex items-start gap-4 group">
-                <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/15 flex items-center justify-center flex-shrink-0 group-hover:bg-[#D4AF37]/25 transition-colors">
+              <li className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/15 flex items-center justify-center flex-shrink-0">
                   <MapPin className="h-5 w-5 text-[#D4AF37]" />
                 </div>
-                <span className="text-[#7B2D26]/80 text-base leading-relaxed group-hover:text-[#6A1E1E] transition-colors">
-                  B 19/1 Double Story Ramesh nagar<br />New Delhi 110015
-                </span>
+                <div>
+                  <p className="font-semibold text-[#6A1E1E] text-sm">Factory Outlet, Begam Bazar</p>
+                  <p className="text-[#7B2D26]/80 text-sm leading-relaxed mt-0.5"># 15-7-401, Byj Complex, Begam Bazar, Hyderabad - 500012</p>
+                  <Link href="/contact" className="text-[#D4AF37] text-sm font-medium hover:underline mt-2 inline-block">View all outlets →</Link>
+                </div>
+              </li>
+              <li className="flex items-center gap-4 group">
+                <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/15 flex items-center justify-center flex-shrink-0 group-hover:bg-[#D4AF37]/25 transition-colors">
+                  <Phone className="h-5 w-5 text-[#D4AF37]" />
+                </div>
+                <a href="tel:+919959067733" className="text-[#7B2D26]/80 hover:text-[#D4AF37] text-base transition-colors font-medium">
+                  +91 99590 67733
+                </a>
               </li>
               <li className="flex items-center gap-4 group">
                 <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/15 flex items-center justify-center flex-shrink-0 group-hover:bg-[#D4AF37]/25 transition-colors">
@@ -150,14 +160,6 @@ export const Footer = () => {
                 </div>
                 <a href="mailto:info@jainfoods.com" className="text-[#7B2D26]/80 hover:text-[#D4AF37] text-base transition-colors font-medium">
                   info@jainfoods.com
-                </a>
-              </li>
-              <li className="flex items-center gap-4 group">
-                <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/15 flex items-center justify-center flex-shrink-0 group-hover:bg-[#D4AF37]/25 transition-colors">
-                  <Phone className="h-5 w-5 text-[#D4AF37]" />
-                </div>
-                <a href="tel:+918851907674" className="text-[#7B2D26]/80 hover:text-[#D4AF37] text-base transition-colors font-medium">
-                  +91 88519 07674
                 </a>
               </li>
             </ul>

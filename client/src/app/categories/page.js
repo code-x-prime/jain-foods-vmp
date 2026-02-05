@@ -10,11 +10,11 @@ import { getCategoryImageUrl } from "@/lib/imageUrl";
 
 
 const CategoryCard = ({ category, index }) => {
+    const hasSubs = category.subCategories?.length > 0;
     return (
         <div className="group animate-fade-in" style={{ animationDelay: `${index * 50}ms` }}>
-            <Link href={`/category/${category.slug}`}>
-                <div className="card-premium h-full hover:border-[#D4AF37]/40">
-                    {/* Image */}
+            <div className="card-premium h-full hover:border-[#D4AF37]/40 flex flex-col">
+                <Link href={`/category/${category.slug}`} className="flex-shrink-0">
                     <div className="relative h-40 w-full overflow-hidden bg-[#FAF6F0] rounded-t-md">
                         <Image
                             src={getCategoryImageUrl(category.image)}
@@ -26,8 +26,6 @@ const CategoryCard = ({ category, index }) => {
                             {category._count?.products || 0}
                         </div>
                     </div>
-
-                    {/* Content */}
                     <div className="p-4 border-t border-[#D4AF37]/20">
                         <h3 className="text-sm font-bold text-[#6A1E1E] mb-1 group-hover:text-[#D4AF37] transition-colors">
                             {category.name}
@@ -44,8 +42,24 @@ const CategoryCard = ({ category, index }) => {
                             </span>
                         </div>
                     </div>
-                </div>
-            </Link>
+                </Link>
+                {hasSubs && (
+                    <div className="p-3 pt-0 mt-auto border-t border-[#D4AF37]/10">
+                        <p className="text-[10px] font-semibold text-[#6A1E1E]/70 uppercase tracking-wide mb-2">Subcategories</p>
+                        <ul className="space-y-1.5">
+                            {category.subCategories.map((sub) => (
+                                <li key={sub.id}>
+                                    <Link href={`/products?category=${encodeURIComponent(category.slug)}&subcategory=${encodeURIComponent(sub.slug)}`} className="flex items-start gap-1.5 text-xs text-[#7B2D26]/80 hover:text-[#D4AF37]">
+                                        <ArrowRight className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                                        <span className="font-medium">{sub.name}</span>
+                                        {sub.description && <span className="text-[10px] text-[#7B2D26]/50 line-clamp-1"> — {sub.description}</span>}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
@@ -131,8 +145,8 @@ export default function CategoriesPage() {
             {/* Main Content */}
             <div className="section-container pb-16">
                 {loading ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-                        {[...Array(10)].map((_, index) => (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                        {[...Array(3)].map((_, index) => (
                             <CategoryCardSkeleton key={index} />
                         ))}
                     </div>
@@ -153,8 +167,8 @@ export default function CategoriesPage() {
                     </div>
                 ) : (
                     <>
-                        {/* Categories Grid */}
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+                        {/* Categories Grid: 3 columns on desktop (Namkeen, Snacks, Sweets) */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
                             {categories.map((category, index) => (
                                 <CategoryCard key={category.id} category={category} index={index} />
                             ))}

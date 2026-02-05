@@ -44,6 +44,7 @@ function ProductsContent() {
     const decodePlus = (str) => (str ? str.replace(/\+/g, " ") : "");
     const searchQuery = decodePlus(searchParams.get("search") || "");
     const categorySlug = searchParams.get("category") || "";
+    const subcategorySlug = searchParams.get("subcategory") || "";
     const productType = searchParams.get("productType") || "";
     const colorId = searchParams.get("color") || "";
     const sizeId = searchParams.get("size") || "";
@@ -55,7 +56,7 @@ function ProductsContent() {
     // Determine which section should be open based on URL params
     const getInitialActiveSection = () => {
         if (searchQuery) return "search";
-        if (categorySlug) return "categories";
+        if (categorySlug || subcategorySlug) return "categories";
         if (colorId) return "colors";
         if (sizeId) return "sizes";
         return "search";
@@ -80,6 +81,7 @@ function ProductsContent() {
     const [filters, setFilters] = useState({
         search: searchQuery,
         category: categorySlug,
+        subcategory: subcategorySlug,
         productType: productType,
         color: colorId,
         size: sizeId,
@@ -108,6 +110,7 @@ function ProductsContent() {
         const newFiltersFromURL = {
             search: searchQuery,
             category: categorySlug,
+            subcategory: subcategorySlug,
             productType: productType,
             color: colorId,
             size: sizeId,
@@ -120,6 +123,7 @@ function ProductsContent() {
         const isSame =
             filters.search === newFiltersFromURL.search &&
             filters.category === newFiltersFromURL.category &&
+            filters.subcategory === newFiltersFromURL.subcategory &&
             filters.productType === newFiltersFromURL.productType &&
             filters.color === newFiltersFromURL.color &&
             filters.size === newFiltersFromURL.size &&
@@ -135,7 +139,7 @@ function ProductsContent() {
             setPagination((prev) => ({ ...prev, page: 1 }));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchQuery, categorySlug, productType, colorId, sizeId, minPrice, maxPrice, sortParam, orderParam]);
+    }, [searchQuery, categorySlug, subcategorySlug, productType, colorId, sizeId, minPrice, maxPrice, sortParam, orderParam]);
 
     const toggleFilterSection = (section) => {
         setActiveFilterSection(activeFilterSection === section ? "" : section);
@@ -154,6 +158,7 @@ function ProductsContent() {
 
         add("search", newFilters.search);
         add("category", newFilters.category);
+        add("subcategory", newFilters.subcategory);
         add("productType", newFilters.productType);
         add("color", newFilters.color);
         add("size", newFilters.size);
@@ -210,6 +215,7 @@ function ProductsContent() {
 
                     if (filters.search) queryParams.append("search", filters.search);
                     if (filters.category) queryParams.append("category", filters.category);
+                    if (filters.subcategory) queryParams.append("subcategory", filters.subcategory);
                     if (filters.minPrice) queryParams.append("minPrice", filters.minPrice);
                     if (filters.maxPrice) queryParams.append("maxPrice", filters.maxPrice);
 
@@ -346,8 +352,8 @@ function ProductsContent() {
             if (isNaN(numValue)) return;
             value = numValue.toString();
         }
-
         const newFilters = { ...filters, [name]: value };
+        if (name === "category") newFilters.subcategory = "";
         setFilters(newFilters);
         updateURL(newFilters);
 
@@ -364,6 +370,10 @@ function ProductsContent() {
                 if (value) setActiveFilterSection("search");
                 break;
             case "category":
+                if (value) setActiveFilterSection("categories");
+                if (name === "category") setFilters((prev) => ({ ...prev, subcategory: "" }));
+                break;
+            case "subcategory":
                 if (value) setActiveFilterSection("categories");
                 break;
             case "color":
@@ -416,6 +426,7 @@ function ProductsContent() {
         const clearedFilters = {
             search: "",
             category: "",
+            subcategory: "",
             productType: "",
             color: "",
             size: "",
@@ -556,15 +567,15 @@ function ProductsContent() {
                                         <div className="space-y-2 max-h-60 overflow-y-auto">
                                             {categories.map((category) => (
                                                 <div key={category.id} className="ml-2">
-                                                    <div className={`cursor-pointer hover:text-[primary] flex items-center ${filters.category === category.slug ? "font-medium text-[primary]" : ""}`} onClick={() => handleFilterChange("category", category.slug)}>
+                                                    <div className={`cursor-pointer hover:text-[#D4AF37] flex items-center ${filters.category === category.slug && !filters.subcategory ? "font-medium text-[#D4AF37]" : "text-[#6A1E1E]"}`} onClick={() => handleFilterChange("category", category.slug)}>
                                                         <ChevronRight className="h-4 w-4 mr-1" />
                                                         {category.name}
                                                     </div>
-                                                    {category.children && category.children.length > 0 && (
+                                                    {category.subCategories && category.subCategories.length > 0 && (
                                                         <div className="ml-4 mt-1 space-y-1">
-                                                            {category.children.map((child) => (
-                                                                <div key={child.id} className={`cursor-pointer hover:text-[primary] text-sm ${filters.category === child.slug ? "font-medium text-[primary]" : ""}`} onClick={() => handleFilterChange("category", child.slug)}>
-                                                                    {child.name}
+                                                            {category.subCategories.map((sub) => (
+                                                                <div key={sub.id} className={`cursor-pointer hover:text-[#D4AF37] text-sm ${filters.subcategory === sub.slug ? "font-medium text-[#D4AF37]" : "text-[#7B2D26]/80"}`} onClick={() => { const next = { ...filters, category: category.slug, subcategory: sub.slug }; setFilters(next); updateURL(next); setPagination((prev) => ({ ...prev, page: 1 })); }}>
+                                                                    {sub.name}
                                                                 </div>
                                                             ))}
                                                         </div>
@@ -693,7 +704,7 @@ function ProductsContent() {
                             </div>
 
                             {/* Active Filters */}
-                            {(filters.search || filters.category || selectedColors.length > 0 || selectedSizes.length > 0 || filters.minPrice || filters.maxPrice) && (
+                            {(filters.search || filters.category || filters.subcategory || selectedColors.length > 0 || selectedSizes.length > 0 || filters.minPrice || filters.maxPrice) && (
                                 <div className="flex flex-wrap items-center gap-2 mb-6 p-3 bg-gray-50 rounded-md border">
                                     <span className="text-sm font-medium">Active Filters:</span>
 
@@ -705,9 +716,15 @@ function ProductsContent() {
                                     )}
 
                                     {filters.category && (
-                                        <div className="bg-[primary] text-black  text-xs px-2 py-1 rounded-md flex items-center">
+                                        <div className="bg-[#D4AF37] text-[#4A1515] text-xs px-2 py-1 rounded-md flex items-center">
                                             <span>Category: {categories.find((c) => c.slug === filters.category)?.name || filters.category}</span>
-                                            <button onClick={() => handleFilterChange("category", "")} className="ml-1"><X className="h-3 w-3" /></button>
+                                            <button onClick={() => { handleFilterChange("category", ""); handleFilterChange("subcategory", ""); }} className="ml-1"><X className="h-3 w-3" /></button>
+                                        </div>
+                                    )}
+                                    {filters.subcategory && (
+                                        <div className="bg-[#D4AF37] text-[#4A1515] text-xs px-2 py-1 rounded-md flex items-center">
+                                            <span>Subcategory: {(() => { const cat = categories.find((c) => c.slug === filters.category); const sub = cat?.subCategories?.find((s) => s.slug === filters.subcategory); return sub?.name || filters.subcategory; })()}</span>
+                                            <button onClick={() => handleFilterChange("subcategory", "")} className="ml-1"><X className="h-3 w-3" /></button>
                                         </div>
                                     )}
 

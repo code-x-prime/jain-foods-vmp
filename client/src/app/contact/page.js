@@ -59,31 +59,61 @@ export default function ContactPage() {
                 </div>
             </section>
 
-            {/* Contact Cards */}
-            <section className="section-container -mt-8 pb-16">
-                <div className="grid md:grid-cols-3 gap-6">
-                    <a href="mailto:info@jainfoods.com" className="card-premium p-8 text-center hover:border-[#D4AF37]/40 group">
-                        <div className="w-16 h-16 bg-[#D4AF37]/15 rounded-lg flex items-center justify-center mx-auto mb-5 group-hover:bg-[#D4AF37] transition-all">
+            {/* Quick contact + Outlets */}
+            <section className="section-container -mt-8 pb-12">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12">
+                    <a href="mailto:info@jainfoods.com" className="card-premium p-6 text-center hover:border-[#D4AF37]/40 group transition-all">
+                        <div className="w-14 h-14 bg-[#D4AF37]/15 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-[#D4AF37] transition-colors">
                             <Mail className="h-7 w-7 text-[#D4AF37] group-hover:text-[#4A1515]" />
                         </div>
-                        <h3 className="font-bold text-[#6A1E1E] text-xl mb-2">Email Us</h3>
-                        <p className="text-[#D4AF37] font-semibold text-lg">info@jainfoods.com</p>
+                        <h3 className="font-bold text-[#6A1E1E] text-lg mb-1">Email</h3>
+                        <p className="text-[#D4AF37] font-semibold text-sm break-all">info@jainfoods.com</p>
                     </a>
-
-                    <a href="tel:+918851907674" className="card-premium p-8 text-center hover:border-[#D4AF37]/40 group">
-                        <div className="w-16 h-16 bg-[#1A7F37]/15 rounded-lg flex items-center justify-center mx-auto mb-5 group-hover:bg-[#1A7F37] transition-all">
+                    <a href="tel:+919959067733" className="card-premium p-6 text-center hover:border-[#D4AF37]/40 group transition-all">
+                        <div className="w-14 h-14 bg-[#1A7F37]/15 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-[#1A7F37] transition-colors">
                             <Phone className="h-7 w-7 text-[#1A7F37] group-hover:text-white" />
                         </div>
-                        <h3 className="font-bold text-[#6A1E1E] text-xl mb-2">Call Us</h3>
-                        <p className="text-[#1A7F37] font-semibold text-lg">+91 88519 07674</p>
+                        <h3 className="font-bold text-[#6A1E1E] text-lg mb-1">Call</h3>
+                        <p className="text-[#1A7F37] font-semibold text-sm">+91 99590 67733</p>
                     </a>
-
-                    <div className="card-premium p-8 text-center">
-                        <div className="w-16 h-16 bg-[#6A1E1E]/15 rounded-lg flex items-center justify-center mx-auto mb-5">
+                    <div className="card-premium p-6 text-center border-[#D4AF37]/20">
+                        <div className="w-14 h-14 bg-[#6A1E1E]/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                             <MapPin className="h-7 w-7 text-[#6A1E1E]" />
                         </div>
-                        <h3 className="font-bold text-[#6A1E1E] text-xl mb-2">Location</h3>
-                        <p className="text-[#7B2D26]/75 text-base">B 19/1 Double Story, Ramesh Nagar, New Delhi 110015</p>
+                        <h3 className="font-bold text-[#6A1E1E] text-lg mb-1">Hyderabad</h3>
+                        <p className="text-[#7B2D26]/70 text-sm">3 outlets · See below</p>
+                    </div>
+                </div>
+
+                {/* Factory Outlets - clean cards */}
+                <div className="border-t border-[#D4AF37]/20 pt-10">
+                    <h2 className="text-xl font-bold text-[#6A1E1E] mb-1 font-display">Factory Outlets</h2>
+                    <p className="text-[#7B2D26]/60 text-sm mb-6">Visit us at any of our locations</p>
+                    <div className="grid md:grid-cols-3 gap-5">
+                        <div className="bg-[#FFFEF9] rounded-lg p-5 border border-[#D4AF37]/20 hover:border-[#D4AF37]/40 transition-colors">
+                            <span className="inline-block px-2.5 py-1 bg-[#D4AF37]/15 text-[#6A1E1E] text-xs font-bold rounded uppercase mb-3">Outlet 1</span>
+                            <p className="text-[#6A1E1E] font-semibold mb-1">Begam Bazar</p>
+                            <p className="text-[#7B2D26]/75 text-sm leading-relaxed mb-3"># 15-7-401, Byj Complex, Begam Bazar, Hyderabad - 500012</p>
+                            <div className="flex flex-wrap gap-x-2 gap-y-1">
+                                <a href="tel:+919959067733" className="text-[#D4AF37] font-medium text-sm hover:underline">99590 67733</a>
+                                <a href="tel:+919392544607" className="text-[#D4AF37] font-medium text-sm hover:underline">93925 44607</a>
+                            </div>
+                        </div>
+                        <div className="bg-[#FFFEF9] rounded-lg p-5 border border-[#D4AF37]/20 hover:border-[#D4AF37]/40 transition-colors">
+                            <span className="inline-block px-2.5 py-1 bg-[#D4AF37]/15 text-[#6A1E1E] text-xs font-bold rounded uppercase mb-3">Outlet 2</span>
+                            <p className="text-[#6A1E1E] font-semibold mb-1">Secunderabad</p>
+                            <p className="text-[#7B2D26]/75 text-sm leading-relaxed mb-3"># 7-1-670/A/B, Near Rajeshwari Talkies, Market Street, Secunderabad - 500003</p>
+                            <div className="flex flex-wrap gap-x-2 gap-y-1">
+                                <a href="tel:+919059815214" className="text-[#D4AF37] font-medium text-sm hover:underline">90598 15214</a>
+                                <a href="tel:+919059738214" className="text-[#D4AF37] font-medium text-sm hover:underline">90597 38214</a>
+                            </div>
+                        </div>
+                        <div className="bg-[#FFFEF9] rounded-lg p-5 border border-[#D4AF37]/20 hover:border-[#D4AF37]/40 transition-colors">
+                            <span className="inline-block px-2.5 py-1 bg-[#6A1E1E]/10 text-[#6A1E1E] text-xs font-bold rounded uppercase mb-3">Factory Unit</span>
+                            <p className="text-[#6A1E1E] font-semibold mb-1">Rajenderanagar</p>
+                            <p className="text-[#7B2D26]/75 text-sm leading-relaxed mb-3"># 6-5-26/2, Babul Reddy Nagar, Shivarampally, Rajenderanagar, Hyderabad - 500077</p>
+                            <a href="tel:+919392976760" className="text-[#D4AF37] font-medium text-sm hover:underline">+91 93929 76760</a>
+                        </div>
                     </div>
                 </div>
             </section>

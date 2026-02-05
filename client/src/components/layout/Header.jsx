@@ -35,6 +35,7 @@ export function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [openMobileCategoryId, setOpenMobileCategoryId] = useState(null);
 
   const searchInputRef = useRef(null);
   const navbarRef = useRef(null);
@@ -51,6 +52,7 @@ export function Navbar() {
     setIsMenuOpen(false);
     setIsSearchOpen(false);
     setActiveDropdown(null);
+    setOpenMobileCategoryId(null);
   }, [pathname]);
 
   useEffect(() => {
@@ -116,9 +118,9 @@ export function Navbar() {
                 </span>
               </div>
               <div className="flex items-center gap-5">
-                <a href="tel:+918851907674" className="flex items-center gap-2 hover:text-[#D4AF37] transition-colors font-medium">
+                <a href="tel:+919959067733" className="flex items-center gap-2 hover:text-[#D4AF37] transition-colors font-medium">
                   <Phone className="w-4 h-4" />
-                  +91 88519 07674
+                  +91 99590 67733
                 </a>
               </div>
             </div>
@@ -163,16 +165,33 @@ export function Navbar() {
                   </button>
 
                   {activeDropdown === "categories" && (
-                    <div className="absolute left-0 top-full pt-2 z-50">
-                      <div className="bg-[#FFFEF9] rounded-md shadow-xl border border-[#D4AF37]/30 py-2 min-w-[200px]">
-                        {categories.slice(0, 8).map((cat) => (
-                          <Link key={cat.id} href={`/category/${cat.slug}`} className="block px-4 py-2.5 text-sm text-[#6A1E1E] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-all">
-                            {cat.name}
-                          </Link>
-                        ))}
-                        <div className="border-t border-[#D4AF37]/20 mt-2 pt-2">
-                          <Link href="/categories" className="block px-4 py-2 text-sm font-semibold text-[#D4AF37] hover:bg-[#D4AF37]/10">
-                            View All →
+                    <div className="absolute right-0 top-full pt-2 z-50">
+                      <div className="bg-[#FFFEF9] rounded-lg shadow-xl border border-[#D4AF37]/30 py-4 px-4 w-[min(560px,calc(100vw-2rem))]">
+                        <div className="grid grid-cols-3 gap-4">
+                          {(categories || []).slice(0, 3).map((cat) => (
+                            <div key={cat.id} className="border-r border-[#D4AF37]/15 last:border-r-0 last:pr-0 pr-3 first:pl-0 pl-1 min-w-0">
+                              <Link href={`/category/${cat.slug}`} className="block py-2 text-sm font-bold text-[#6A1E1E] hover:text-[#D4AF37] transition-colors border-b border-[#D4AF37]/20 mb-2">
+                                {cat.name}
+                              </Link>
+                              {cat.subCategories?.length > 0 ? (
+                                <ul className="space-y-1">
+                                  {cat.subCategories.map((sub) => (
+                                    <li key={sub.id} className="truncate" title={sub.name}>
+                                      <Link href={`/products?category=${encodeURIComponent(cat.slug)}&subcategory=${encodeURIComponent(sub.slug)}`} className="block py-1.5 text-xs text-[#7B2D26]/85 hover:text-[#D4AF37] hover:pl-1 transition-all truncate" onClick={() => setActiveDropdown(null)}>
+                                        {sub.name}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : (
+                                <Link href={`/category/${cat.slug}`} className="block py-1.5 text-xs text-[#7B2D26]/60 hover:text-[#D4AF37]">View all</Link>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                        <div className="border-t border-[#D4AF37]/20 mt-4 pt-3 text-center">
+                          <Link href="/categories" className="inline-block text-sm font-semibold text-[#D4AF37] hover:text-[#C4A030] hover:underline" onClick={() => setActiveDropdown(null)}>
+                            View All Categories →
                           </Link>
                         </div>
                       </div>
@@ -302,8 +321,8 @@ export function Navbar() {
       {isMenuOpen && (
         <div className="fixed inset-0 z-[60] lg:hidden">
           <div className="absolute inset-0 bg-[#4A1515]/60" onClick={() => setIsMenuOpen(false)} />
-          <div className="absolute right-0 top-0 bottom-0 w-[85%] max-w-sm bg-[#FFFEF9] shadow-2xl">
-            <div className="flex items-center justify-between p-4 border-b border-[#D4AF37]/20 bg-[#6A1E1E]">
+          <div className="absolute right-0 top-0 bottom-0 w-[85%] max-w-sm bg-[#FFFEF9] shadow-2xl flex flex-col">
+            <div className="flex-shrink-0 flex items-center justify-between p-4 border-b border-[#D4AF37]/20 bg-[#6A1E1E]">
               <Image src="/logo.png" alt="Jain Foods" width={100} height={35} className="h-8 w-auto" />
               <button onClick={() => setIsMenuOpen(false)} className="p-2 text-[#FAF6F0]/80 hover:text-[#D4AF37] rounded-md">
                 <X className="w-5 h-5" />
@@ -312,7 +331,7 @@ export function Navbar() {
 
             <ClientOnly>
               {isAuthenticated ? (
-                <div className="p-4 bg-[#FAF6F0] border-b border-[#D4AF37]/20">
+                <div className="flex-shrink-0 p-4 bg-[#FAF6F0] border-b border-[#D4AF37]/20">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-[#D4AF37] rounded-md flex items-center justify-center text-[#4A1515] font-bold">
                       {user?.name?.charAt(0)?.toUpperCase() || "U"}
@@ -324,7 +343,7 @@ export function Navbar() {
                   </div>
                 </div>
               ) : (
-                <div className="p-4 border-b border-[#D4AF37]/20 flex gap-2">
+                <div className="flex-shrink-0 p-4 border-b border-[#D4AF37]/20 flex gap-2">
                   <Link href="/auth" className="flex-1" onClick={() => setIsMenuOpen(false)}>
                     <Button className="w-full btn-primary">Sign In</Button>
                   </Link>
@@ -335,13 +354,35 @@ export function Navbar() {
               )}
             </ClientOnly>
 
-            <div className="flex-1 overflow-y-auto py-4">
+            <div className="flex-1 min-h-0 overflow-y-auto py-4">
               <div className="px-4 space-y-1">
                 <Link href="/products" className="block px-4 py-3 text-[#6A1E1E] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 rounded-md font-medium" onClick={() => setIsMenuOpen(false)}>
                   All Products
                 </Link>
+                {/* Mobile: accordion – one category open at a time */}
+                {(categories || []).slice(0, 3).map((cat) => (
+                  <div key={cat.id} className="rounded-md overflow-hidden border border-[#D4AF37]/15">
+                    <button
+                      type="button"
+                      className="w-full flex items-center justify-between px-4 py-3 bg-[#FAF6F0]/50 text-[#6A1E1E] font-bold hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 text-left"
+                      onClick={() => setOpenMobileCategoryId((prev) => (prev === cat.id ? null : cat.id))}
+                    >
+                      <span>{cat.name}</span>
+                      <ChevronDown className={cn("w-4 h-4 transition-transform flex-shrink-0 ml-2", openMobileCategoryId === cat.id && "rotate-180")} />
+                    </button>
+                    {openMobileCategoryId === cat.id && cat.subCategories?.length > 0 && (
+                      <div className="pl-4 pr-2 pb-2 pt-0 space-y-0.5 bg-[#FFFEF9]">
+                        {cat.subCategories.map((sub) => (
+                          <Link key={sub.id} href={`/products?category=${encodeURIComponent(cat.slug)}&subcategory=${encodeURIComponent(sub.slug)}`} className="block py-2 text-sm text-[#7B2D26]/85 hover:text-[#D4AF37] border-b border-[#D4AF37]/10 last:border-0" onClick={() => setIsMenuOpen(false)}>
+                            {sub.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
                 <Link href="/categories" className="block px-4 py-3 text-[#6A1E1E] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 rounded-md font-medium" onClick={() => setIsMenuOpen(false)}>
-                  Categories
+                  View All Categories
                 </Link>
                 <Link href="/wishlist" className="block px-4 py-3 text-[#6A1E1E] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 rounded-md font-medium" onClick={() => setIsMenuOpen(false)}>
                   Wishlist

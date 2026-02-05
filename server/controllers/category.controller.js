@@ -8,10 +8,14 @@ import { createSlug } from "../helper/Slug.js";
 
 // ---------------------- PUBLIC ROUTES ---------------------- //
 
-// Get all categories with their subcategories
+// Get all categories with their subcategories (for public: navbar, categories page, products filter)
 export const getAllCategories = asyncHandler(async (req, res) => {
   const categories = await prisma.category.findMany({
     include: {
+      subCategories: {
+        where: { isActive: true },
+        orderBy: { name: "asc" },
+      },
       _count: {
         select: {
           products: true,
@@ -23,10 +27,14 @@ export const getAllCategories = asyncHandler(async (req, res) => {
     },
   });
 
-  // Format the response with image URLs
+  // Format with image URLs for category and each subcategory
   const formattedCategories = categories.map((category) => ({
     ...category,
     image: category.image ? getFileUrl(category.image) : null,
+    subCategories: (category.subCategories || []).map((sub) => ({
+      ...sub,
+      image: sub.image ? getFileUrl(sub.image) : null,
+    })),
   }));
 
   res
@@ -103,39 +111,31 @@ export const getProductsByCategory = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Category not found");
   }
 
-  // Get category ID
-  const categoryIds = [category.id];
-
-  // Count total products in this category and its subcategories
-  const totalProducts = await prisma.product.count({
-    where: {
-      categories: {
-        some: {
-          category: {
-            id: {
-              in: categoryIds,
-            },
+  // Products in this category OR in any subcategory of this category
+  const productWhere = {
+    isActive: true,
+    OR: [
+      {
+        categories: {
+          some: { categoryId: category.id },
+        },
+      },
+      {
+        subCategories: {
+          some: {
+            subCategory: { categoryId: category.id },
           },
         },
       },
-      isActive: true,
-    },
+    ],
+  };
+
+  const totalProducts = await prisma.product.count({
+    where: productWhere,
   });
 
-  // Get paginated products
   const products = await prisma.product.findMany({
-    where: {
-      categories: {
-        some: {
-          category: {
-            id: {
-              in: categoryIds,
-            },
-          },
-        },
-      },
-      isActive: true,
-    },
+    where: productWhere,
     include: {
       images: {
         where: { isPrimary: true },

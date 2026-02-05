@@ -12,6 +12,7 @@ export const getAllProducts = asyncHandler(async (req, res) => {
     limit = 10,
     search = "",
     category = "",
+    subcategory = "",
     sort = "createdAt",
     order = "desc",
     minPrice,
@@ -46,6 +47,30 @@ export const getAllProducts = asyncHandler(async (req, res) => {
     });
   }
 
+  // Resolve subcategory id(s) when subcategory filter is used
+  let subcategoryIds = [];
+  if (subcategory) {
+    if (category) {
+      const cat = await prisma.category.findFirst({
+        where: { OR: [{ id: category }, { slug: category }] },
+        select: { id: true },
+      });
+      if (cat) {
+        const sub = await prisma.subCategory.findFirst({
+          where: { categoryId: cat.id, slug: subcategory, isActive: true },
+          select: { id: true },
+        });
+        if (sub) subcategoryIds = [sub.id];
+      }
+    } else {
+      const subs = await prisma.subCategory.findMany({
+        where: { slug: subcategory, isActive: true },
+        select: { id: true },
+      });
+      subcategoryIds = subs.map((s) => s.id);
+    }
+  }
+
   // Build filter conditions
   const whereConditions = {
     isActive: true, // Only show active products
@@ -76,13 +101,19 @@ export const getAllProducts = asyncHandler(async (req, res) => {
       ],
     }),
     // Filter by category
-    ...(category && {
+    ...(category && !subcategory && {
       categories: {
         some: {
           category: {
             OR: [{ id: category }, { slug: category }],
           },
         },
+      },
+    }),
+    // Filter by subcategory (by resolved ids)
+    ...(subcategoryIds.length > 0 && {
+      subCategories: {
+        some: { subCategoryId: { in: subcategoryIds } },
       },
     }),
     // Filter by featured
