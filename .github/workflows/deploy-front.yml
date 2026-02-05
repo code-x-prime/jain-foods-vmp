@@ -1,0 +1,30 @@
+# CI/CD: Front (admin panel) – sirf jab front/ folder me change ho
+# main branch pe push hone par, agar front/** change hua to VPS pe admin deploy
+
+name: Deploy Front (Admin)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "front/**"
+      - ".github/workflows/deploy-front.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy admin (front) to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            cd ${{ secrets.REPO_PATH || '~/jain-foods-vmp' }}
+            git pull origin main
+            cd front
+            npm ci
+            npm run build
+            pm2 restart jain-admin --update-env
