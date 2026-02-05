@@ -1,6 +1,3 @@
-# CI/CD: Client (customer website) – sirf jab client/ folder me change ho
-# main branch pe push hone par, agar client/** change hua to VPS pe client deploy
-
 name: Deploy Client
 
 on:

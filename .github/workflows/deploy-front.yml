@@ -1,6 +1,3 @@
-# CI/CD: Front (admin panel) – sirf jab front/ folder me change ho
-# main branch pe push hone par, agar front/** change hua to VPS pe admin deploy
-
 name: Deploy Front (Admin)
 
 on:
